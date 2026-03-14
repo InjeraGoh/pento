@@ -144,4 +144,27 @@ defmodule Pento.Catalog do
 
     Product.changeset(product, attrs, scope)
   end
+
+  @doc """
+    Applies a markdown to the product's unit price and updates it in the database.
+
+  ## Examples
+
+      iex> markdown_product(product, 5.0)
+      {:ok, %Product{}}
+
+      iex> markdown_product(product, -3.0)
+      {:error, %Ecto.Changeset{}}
+
+      iex> markdown_product(product, 100.0)
+      {:error, %Ecto.Changeset{}}
+
+  """
+
+  def markdown_product(%Product{} = product, markdown_amount) do
+    product
+    |> Product.markdown_changeset(markdown_amount)
+    |> Repo.update()
+  end
+
 end
