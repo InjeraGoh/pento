@@ -58,11 +58,22 @@ defmodule PentoWeb.Router do
 
         live "/products", ProductLive.Index, :index
         live "/products/new", ProductLive.Form, :new
+
+        ## Chapter 4 Q1: Which route gets invoked when you click the link on the Index page to view a given product?
+        ## Answer: PentoWeb.ProductLive.Show
+
+        ## Clicking the Show link on the index page invokes the route /products/:id, which loads PentoWeb.ProductLive.Show.
         live "/products/:id", ProductLive.Show, :show
         live "/products/:id/edit", ProductLive.Form, :edit
 
         live "/users/settings", UserLive.Settings, :edit
         live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
+
+        live "/questions", QuestionLive.Index, :index
+        live "/questions/new", QuestionLive.Form, :new
+        live "/questions/:id", QuestionLive.Show, :show
+        live "/questions/:id/edit", QuestionLive.Form, :edit
+
     end
 
     post "/users/update-password", UserSessionController, :update_password
