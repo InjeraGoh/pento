@@ -38,6 +38,15 @@ defmodule Pento.Accounts.UserNotifier do
     """)
   end
 
+  def deliver_promotion(user, url) do
+    deliver(user.email, "Special Promotion", """
+    Hi #{user.email},
+
+    Check out our latest promotion here:
+    #{url}
+    """)
+  end
+
   @doc """
   Deliver instructions to log in with a magic link.
   """

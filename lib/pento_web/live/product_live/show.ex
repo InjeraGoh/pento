@@ -34,6 +34,15 @@ defmodule PentoWeb.ProductLive.Show do
         <:item title="Sku">{@product.sku}</:item>
       </.list>
 
+      <div>
+        <img
+          :if={@product.image_upload}
+          alt="product image"
+          width="400"
+          src={@product.image_upload}
+        />
+      </div>
+
       <%!-- Chapter 4 extra task --%>
       <p class="mt-4 text-sm text-gray-700">
         {@my_message}

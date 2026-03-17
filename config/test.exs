@@ -10,7 +10,7 @@ config :pbkdf2_elixir, :rounds, 1
 # Run `mix help test` for more information.
 config :pento, Pento.Repo,
   username: "postgres",
-  password: "abc123",
+  password: "postgres",
   hostname: "localhost",
   database: "pento_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,

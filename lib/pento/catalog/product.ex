@@ -8,6 +8,7 @@ defmodule Pento.Catalog.Product do
     field :unit_price, :float
     field :sku, :integer
     field :user_id, :id
+    field :image_upload, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -15,14 +16,20 @@ defmodule Pento.Catalog.Product do
   @doc false
   def changeset(product, attrs, user_scope) do
     product
-    |> cast(attrs, [:name, :description, :unit_price, :sku])
+    |> cast(attrs, [:name, :description, :unit_price, :sku, :image_upload])
     |> validate_required([:name, :description, :unit_price, :sku])
     |> unique_constraint(:sku)
+    |> validate_number(:sku,
+        greater_than_or_equal_to: 100000,
+        less_than_or_equal_to: 999999,
+        message: "must be exactly 6 digits"
+      )
     |> validate_number(:unit_price, greater_than: 0.0)
     |> put_change(:user_id, user_scope.user.id)
   end
 
-  # Chapter 3 (Pg 103) - Exercise 3.2 - Add a markdown_changeset/2 function to the Product schema that takes a product and a markdown amount, and returns a changeset with the unit price reduced by the markdown amount. Ensure that the new price is not negative.
+  # Chapter 3 (Pg 103) - Exercise 3.2 -
+  # Add a markdown_changeset/2 function to the Product schema that takes a product and a markdown amount, and returns a changeset with the unit price reduced by the markdown amount. Ensure that the new price is not negative.
   def markdown_changeset(product, markdown_amount) do
     new_price = product.unit_price - markdown_amount
 

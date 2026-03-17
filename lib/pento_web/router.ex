@@ -55,6 +55,8 @@ defmodule PentoWeb.Router do
       root_layout: {PentoWeb.Layouts, :root},
       on_mount: [{PentoWeb.UserAuth, :require_authenticated}] do
         live "/guess", WrongLive
+        live "/promo", PromoLive
+        live "/search", SearchLive
 
         live "/products", ProductLive.Index, :index
         live "/products/new", ProductLive.Form, :new
