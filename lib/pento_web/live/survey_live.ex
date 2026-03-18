@@ -2,7 +2,9 @@ defmodule PentoWeb.SurveyLive do
   use PentoWeb, :live_view
 
   alias Pento.{Survey, Catalog}
-  alias PentoWeb.DemographicLive.Show
+  alias PentoWeb.DemographicLive.{Show, Form}
+  alias PentoWeb.RatingLive.Index
+  alias Phoenix.LiveView.JS
   alias __MODULE__.Component
 
   @impl true
@@ -25,9 +27,11 @@ defmodule PentoWeb.SurveyLive do
     assign(socket, :products, products)
   end
 
-@impl true
-def render(assigns) do
-  ~H"""
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <Layouts.flash_group flash={@flash} />
+
     <Component.hero content="Survey">
       Please fill out our survey
     </Component.hero>
@@ -35,8 +39,13 @@ def render(assigns) do
     <div class="container mx-auto px-4 py-8 max-w-4xl">
       <%= if @demographic do %>
         <Show.details demographic={@demographic} />
+        <Index.product_list products={@products} current_scope={@current_scope} />
       <% else %>
-        <h3>Demographic form coming soon...</h3>
+        <.live_component
+          module={Form}
+          id="demographic-form"
+          current_scope={@current_scope}
+        />
       <% end %>
     </div>
 
@@ -52,6 +61,26 @@ def render(assigns) do
     </div>
 
     <div class="mt-6">
+      <.live_component
+        module={PentoWeb.ToggleLive.Panel}
+        id="demo-toggle"
+      />
+    </div>
+
+    <div class="mt-6 rounded border p-4">
+      <button
+        class="btn btn-primary"
+        phx-click={JS.toggle(to: "#extra-info")}
+      >
+        Toggle Extra Info
+      </button>
+
+      <div id="extra-info" class="hidden mt-4 rounded border p-3">
+        This content is toggled in the browser only, with no server round-trip.
+      </div>
+    </div>
+
+    <div class="mt-6">
       <Component.bullet_list
         items={[
           "Demographic details are displaying correctly",
@@ -60,6 +89,34 @@ def render(assigns) do
         ]}
       />
     </div>
-  """
+
+    """
+  end
+
+  @impl true
+  def handle_info({:created_demographic, demographic}, socket) do
+    socket = handle_demographic_created(socket, demographic)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:created_rating, product, product_index}, socket) do
+    socket = handle_rating_created(socket, product, product_index)
+    {:noreply, socket}
+  end
+
+  defp handle_demographic_created(socket, demographic) do
+    socket
+    |> put_flash(:info, "Demographic created successfully")
+    |> assign(:demographic, demographic)
+  end
+
+  defp handle_rating_created(socket, product, product_index) do
+    current_products = socket.assigns.products
+    products = List.replace_at(current_products, product_index, product)
+
+    socket
+    |> put_flash(:info, "Rating created successfully")
+    |> assign(:products, products)
   end
 end
