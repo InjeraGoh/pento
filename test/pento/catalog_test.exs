@@ -29,14 +29,14 @@ defmodule Pento.CatalogTest do
     end
 
     test "create_product/2 with valid data creates a product" do
-      valid_attrs = %{name: "some name", description: "some description", unit_price: 120.5, sku: 42}
+      valid_attrs = %{name: "some name", description: "some description", unit_price: 120.5, sku: 123456}
       scope = user_scope_fixture()
 
       assert {:ok, %Product{} = product} = Catalog.create_product(scope, valid_attrs)
       assert product.name == "some name"
       assert product.description == "some description"
       assert product.unit_price == 120.5
-      assert product.sku == 42
+      assert product.sku == 123456
       assert product.user_id == scope.user.id
     end
 
@@ -48,13 +48,13 @@ defmodule Pento.CatalogTest do
     test "update_product/3 with valid data updates the product" do
       scope = user_scope_fixture()
       product = product_fixture(scope)
-      update_attrs = %{name: "some updated name", description: "some updated description", unit_price: 456.7, sku: 43}
+      update_attrs = %{name: "some updated name", description: "some updated description", unit_price: 456.7, sku: 234567}
 
       assert {:ok, %Product{} = product} = Catalog.update_product(scope, product, update_attrs)
       assert product.name == "some updated name"
       assert product.description == "some updated description"
       assert product.unit_price == 456.7
-      assert product.sku == 43
+      assert product.sku == 234567
     end
 
     test "update_product/3 with invalid scope raises" do

@@ -49,6 +49,13 @@ defmodule PentoWeb.ProductLive.Form do
           </div>
         </div>
 
+        <div :if={Enum.empty?(@uploads.image.entries) && @product.image_upload}>
+          <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+            <img src={@product.image_upload} alt="Current product image" class="w-20 h-20 object-cover mb-2" />
+            <p>Current image</p>
+          </div>
+        </div>
+
         <div :for={err <- upload_errors(@uploads.image)}
           class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           Upload error: {upload_error_to_string(err)}
@@ -165,7 +172,11 @@ defmodule PentoWeb.ProductLive.Form do
       |> consume_uploaded_entries(:image, &upload_static_file/2)
       |> List.first()
 
-    Map.put(params, "image_upload", path)
+    if path do
+      Map.put(params, "image_upload", path)
+    else
+      params
+    end
   end
 
   defp upload_static_file(%{path: path}, _entry) do
