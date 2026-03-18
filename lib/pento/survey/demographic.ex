@@ -27,7 +27,7 @@ defmodule Pento.Survey.Demographic do
       [
         "high school",
         "bachelor's degree",
-        "graduate degree",
+        "postgraduate degree",
         "other",
         "prefer not to say"
       ]

@@ -9,7 +9,7 @@ defmodule Pento.SurveyTest do
     import Pento.AccountsFixtures, only: [user_scope_fixture: 0]
     import Pento.SurveyFixtures
 
-    @invalid_attrs %{gender: nil, year_of_birth: nil}
+    @invalid_attrs %{gender: nil, year_of_birth: nil, education_level: nil}
 
     test "list_demographics/1 returns all scoped demographics" do
       scope = user_scope_fixture()
@@ -29,7 +29,7 @@ defmodule Pento.SurveyTest do
     end
 
     test "create_demographic/2 with valid data creates a demographic" do
-      valid_attrs = %{gender: "male", year_of_birth: 1990}
+      valid_attrs = %{gender: "male", year_of_birth: 1990, education_level: "bachelor's degree"}
       scope = user_scope_fixture()
 
       assert {:ok, %Demographic{} = demographic} = Survey.create_demographic(scope, valid_attrs)
@@ -46,7 +46,7 @@ defmodule Pento.SurveyTest do
     test "update_demographic/3 with valid data updates the demographic" do
       scope = user_scope_fixture()
       demographic = demographic_fixture(scope)
-      update_attrs = %{gender: "female", year_of_birth: 2000}
+      update_attrs = %{gender: "female", year_of_birth: 2000, education_level: "postgraduate degree"}
 
       assert {:ok, %Demographic{} = demographic} = Survey.update_demographic(scope, demographic, update_attrs)
       assert demographic.gender == "female"
