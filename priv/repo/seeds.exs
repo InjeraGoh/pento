@@ -24,19 +24,19 @@ products = [
     name: "Chess",
     description: "The classic strategy game",
     unit_price: 10.00,
-    sku: 5678910
+    sku: 567891
   },
   %{
     name: "Checkers",
     description: "A classic board game",
     unit_price: 8.00,
-    sku: 1234567
+    sku: 123456
   },
   %{
     name: "Backgammon",
     description: "An ancient strategy game",
     unit_price: 15.00,
-    sku: 9876543
+    sku: 987654
   }
 ]
 

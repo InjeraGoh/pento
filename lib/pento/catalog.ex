@@ -8,6 +8,7 @@ defmodule Pento.Catalog do
 
   alias Pento.Catalog.Product
   alias Pento.Accounts.Scope
+  alias Pento.Catalog.Product.Query, as: ProductQuery
 
   @doc """
   Subscribes to scoped notifications about any product changes.
@@ -43,6 +44,15 @@ defmodule Pento.Catalog do
   def list_products(%Scope{} = scope) do
     Repo.all_by(Product, user_id: scope.user.id)
   end
+
+  @doc """
+  Returns the list of products with the user's ratings preloaded.
+  """
+  def list_products_with_user_rating(%Pento.Accounts.Scope{} = scope) do
+  ProductQuery.base()
+  |> ProductQuery.with_user_ratings(scope.user)
+  |> Repo.all()
+end
 
   @doc """
   Gets a single product.
