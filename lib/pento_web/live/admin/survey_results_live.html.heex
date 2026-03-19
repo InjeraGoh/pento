@@ -1,0 +1,64 @@
+<section class="m-8">
+  <h2 class="font-light text-2xl">Survey Results</h2>
+  <div id="survey-results-component">
+    <div class="container">
+      <div class="float-container">
+        <div class="float-child">
+          <.form
+            for={%{}}
+            as={:gender_filter}
+            phx-change="gender_filter"
+            phx-target={@myself}
+            id="gender-form"
+          >
+            <label class="label">
+              <span class="label-text text-sm">By gender:</span>
+            </label>
+
+            <select
+              name="gender_filter"
+              id="gender_filter"
+              class="select select-bordered select-sm w-full"
+            >
+              <%= for gender <- ["all", "male", "female", "other", "prefer not to say"] do %>
+                <option value={gender} selected={@gender_filter == gender}>
+                  <%= gender %>
+                </option>
+              <% end %>
+            </select>
+          </.form>
+        </div>
+
+        <div class="float-child">
+          <.form
+            for={%{}}
+            as={:age_group_filter}
+            phx-change="age_group_filter"
+            phx-target={@myself}
+            id="age-group-form"
+          >
+            <label class="label">
+              <span class="label-text text-sm">By age group:</span>
+            </label>
+
+            <select
+              name="age_group_filter"
+              id="age_group_filter"
+              class="select select-bordered select-sm w-full"
+            >
+              <%= for age_group <- ["all", "18 and under", "18 to 25", "25 to 35", "35 and up"] do %>
+                <option value={age_group} selected={@age_group_filter == age_group}>
+                  <%= age_group %>
+                </option>
+              <% end %>
+            </select>
+          </.form>
+        </div>
+      </div>
+    </div>
+
+    <div id="survey-results-chart">
+      <%= @chart_svg %>
+    </div>
+  </div>
+</section>

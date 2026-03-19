@@ -70,6 +70,8 @@ defmodule PentoWeb.Router do
 
         live "/survey", SurveyLive, :index
 
+        live "/admin/dashboard", Admin.DashboardLive
+
         live "/users/settings", UserLive.Settings, :edit
         live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
 

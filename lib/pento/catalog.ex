@@ -177,4 +177,21 @@ end
     |> Repo.update()
   end
 
+def products_with_average_ratings(%{
+      age_group_filter: age_group_filter,
+      gender_filter: gender_filter
+    }) do
+  ProductQuery.with_average_ratings()
+  |> ProductQuery.join_users()
+  |> ProductQuery.join_demographics()
+  |> ProductQuery.filter_by_age_group(age_group_filter)
+  |> ProductQuery.filter_by_gender(gender_filter)
+  |> Repo.all()
+end
+
+  def products_with_zero_ratings do
+    ProductQuery.with_zero_ratings()
+    |> Repo.all()
+  end
+
 end
