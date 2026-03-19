@@ -3,53 +3,73 @@ defmodule PentoWeb.Admin.SurveyResultsLive do
 
   alias Pento.Catalog
 
+  @impl true
   def update(assigns, socket) do
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign_age_group_filter()
-      |> assign_gender_filter()
-      |> assign_products_with_average_ratings()
-      |> assign_dataset()
-      |> assign_chart()
-      |> assign_chart_svg()
-    }
+     socket
+     |> assign(assigns)
+     |> assign_age_group_filter()
+     |> assign_gender_filter()
+     |> assign_products_with_average_ratings()
+     |> assign_dataset()
+     |> assign_chart()
+     |> assign_chart_svg()}
   end
 
+  @impl true
   def handle_event("gender_filter", %{"gender_filter" => gender}, socket) do
     {:noreply,
-    socket
-    |> assign_gender_filter(gender)
-    |> assign_products_with_average_ratings()
-    |> assign_dataset()
-    |> assign_chart()
-    |> assign_chart_svg()}
+     socket
+     |> assign_gender_filter(gender)
+     |> assign_products_with_average_ratings()
+     |> assign_dataset()
+     |> assign_chart()
+     |> assign_chart_svg()}
   end
 
+  @impl true
   def handle_event("age_group_filter", %{"age_group_filter" => age_group}, socket) do
-  {:noreply,
-   socket
-   |> assign_age_group_filter(age_group)
-   |> assign_products_with_average_ratings()
-   |> assign_dataset()
-   |> assign_chart()
-   |> assign_chart_svg()}
-end
+    {:noreply,
+     socket
+     |> assign_age_group_filter(age_group)
+     |> assign_products_with_average_ratings()
+     |> assign_dataset()
+     |> assign_chart()
+     |> assign_chart_svg()}
+  end
 
-def assign_gender_filter(socket) do
-  assign(socket, :gender_filter, "all")
-end
+  # Keep existing age_group_filter if already present in assigns
+  def assign_age_group_filter(
+        %{assigns: %{age_group_filter: age_group_filter}} = socket
+      ) do
+    assign(socket, :age_group_filter, age_group_filter)
+  end
 
-def assign_gender_filter(socket, gender) do
-  assign(socket, :gender_filter, gender)
-end
-
-def assign_age_group_filter(socket, age_group) do
-  assign(socket, :age_group_filter, age_group)
-end
-
+  # Default age_group_filter when none exists yet
   def assign_age_group_filter(socket) do
     assign(socket, :age_group_filter, "all")
+  end
+
+  # Set age_group_filter when user changes dropdown
+  def assign_age_group_filter(socket, age_group_filter) do
+    assign(socket, :age_group_filter, age_group_filter)
+  end
+
+  # Keep existing gender_filter if already present in assigns
+  def assign_gender_filter(
+        %{assigns: %{gender_filter: gender_filter}} = socket
+      ) do
+    assign(socket, :gender_filter, gender_filter)
+  end
+
+  # Default gender_filter when none exists yet
+  def assign_gender_filter(socket) do
+    assign(socket, :gender_filter, "all")
+  end
+
+  # Set gender_filter when user changes dropdown
+  def assign_gender_filter(socket, gender_filter) do
+    assign(socket, :gender_filter, gender_filter)
   end
 
   def assign_products_with_average_ratings(

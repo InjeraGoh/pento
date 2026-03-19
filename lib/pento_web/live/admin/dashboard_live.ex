@@ -1,9 +1,57 @@
 defmodule PentoWeb.Admin.DashboardLive do
   use PentoWeb, :live_view
 
+  alias PentoWeb.Endpoint
+  alias PentoWeb.Admin.SurveyResultsLive
+  alias PentoWeb.Admin.UserActivityLive
+  alias PentoWeb.Admin.SurveyTakersLive
+
+  @survey_results_topic "survey_results"
+  @user_activity_topic "user_activity"
+  @survey_takers_topic "survey_takers"
+
   @impl true
   def mount(_params, _session, socket) do
+    if connected?(socket) do
+      Endpoint.subscribe(@survey_results_topic)
+      Endpoint.subscribe(@user_activity_topic)
+      Endpoint.subscribe(@survey_takers_topic)
+    end
+
     {:ok,
-     assign(socket, :survey_results_component_id, "survey-results")}
+     socket
+     |> assign(:survey_results_component_id, "survey-results")
+     |> assign(:user_activity_component_id, "user-activity")
+     |> assign(:survey_takers_component_id, "survey-takers")}
+  end
+
+  @impl true
+  def handle_info(%{event: "rating_created"}, socket) do
+    send_update(
+      SurveyResultsLive,
+      id: socket.assigns.survey_results_component_id
+    )
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(%{event: "presence_diff", topic: "user_activity"}, socket) do
+    send_update(
+      UserActivityLive,
+      id: socket.assigns.user_activity_component_id
+    )
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(%{event: "presence_diff", topic: "survey_takers"}, socket) do
+    send_update(
+      SurveyTakersLive,
+      id: socket.assigns.survey_takers_component_id
+    )
+
+    {:noreply, socket}
   end
 end

@@ -1,0 +1,8 @@
+<div class="survey-takers-component mt-8 border p-4">
+  <h2>Survey Takers</h2>
+  <p>Users currently taking the survey: {@survey_takers_count}</p>
+
+  <ul>
+    <li :for={user <- @survey_takers}>{user.email}</li>
+  </ul>
+</div>

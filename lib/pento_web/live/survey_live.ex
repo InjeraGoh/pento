@@ -6,15 +6,26 @@ defmodule PentoWeb.SurveyLive do
   alias PentoWeb.RatingLive.Index
   alias Phoenix.LiveView.JS
   alias __MODULE__.Component
+  alias PentoWeb.Endpoint
+  alias PentoWeb.Presence
+  @survey_results_topic "survey_results"
 
   @impl true
   def mount(_params, _session, socket) do
+    if connected?(socket) do
+      maybe_track_survey_taker(socket)
+    end
+
     socket =
       socket
       |> assign_demographic()
       |> assign_products()
 
     {:ok, socket}
+  end
+
+  defp maybe_track_survey_taker(%{assigns: %{current_scope: current_scope}}) do
+    Presence.track_survey_taker(self(), current_scope.user.email)
   end
 
   defp assign_demographic(socket) do
@@ -114,6 +125,8 @@ defmodule PentoWeb.SurveyLive do
   defp handle_rating_created(socket, product, product_index) do
     current_products = socket.assigns.products
     products = List.replace_at(current_products, product_index, product)
+
+    Endpoint.broadcast(@survey_results_topic, "rating_created", %{})
 
     socket
     |> put_flash(:info, "Rating created successfully")

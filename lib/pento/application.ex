@@ -15,7 +15,8 @@ defmodule Pento.Application do
       # Start a worker by calling: Pento.Worker.start_link(arg)
       # {Pento.Worker, arg},
       # Start to serve requests, typically the last entry
-      PentoWeb.Endpoint
+      PentoWeb.Endpoint,
+      PentoWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

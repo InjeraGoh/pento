@@ -2,13 +2,7 @@ defmodule PentoWeb.ProductLive.Show do
   use PentoWeb, :live_view
 
   alias Pento.Catalog
-
-  ## Chapter 4 Q4: How does the Show template render the Product Edit form?
-  ## It navigates to the edit route VIA 'edit product' button (which links to PentoWeb.ProductLIve.Edit in Router.ex)
-
-  ## The ProductLive.Show template does not render the edit form directly.
-  ## It navigates to /products/:id/edit?return_to=show, which loads ProductLive.Edit.
-  ## That page renders the form, and the form supports "validate" and "save" events.
+  alias PentoWeb.Presence
 
   @impl true
   def render(assigns) do
@@ -43,53 +37,39 @@ defmodule PentoWeb.ProductLive.Show do
         />
       </div>
 
-      <%!-- Chapter 4 extra task --%>
       <p class="mt-4 text-sm text-gray-700">
         {@my_message}
       </p>
-
     </Layouts.app>
     """
   end
 
-  ## Chapter 4 Q2: What data does ProductLive.Show.mount/3 add to the socket?
-  ## Assigns :page_title and :product to the socket.
-  ## mount/3 assigns :page_title and :product to the socket.
-
-
-
-  ## Chapter 4 Q3: How does the ProductLive.Show live view use the handle_params/3 callback?
-  ## IN my version of Phoenix it is not used. URL Parameters are handled in the mount/3 callback.
-
-  ## Step 1: SUbscribes to Product Updates events.
-  ## Step 2: Assigns Page Title
-  ## Step 3: Fetch Product via Catalog.get_product!/2
-  ## Step 4: Store Product in Socket via @product.
-
-  ## In my generated version, handle_params/3 is not used.
-  ## Instead, the "id" route parameter is handled directly in mount/3, which fetches and assigns the product.
-
-
   @impl true
   def mount(%{"id" => id}, _session, socket) do
+    product = Catalog.get_product!(socket.assigns.current_scope, id)
+
     if connected?(socket) do
       Catalog.subscribe_products(socket.assigns.current_scope)
+      maybe_track_user(product, socket)
     end
 
     {:ok,
      socket
      |> assign(:page_title, "Show Product")
-     |> assign(:product, Catalog.get_product!(socket.assigns.current_scope, id))
-
-      #  Chapter 4 extra task
+     |> assign(:product, product)
      |> assign(:my_message, "Hello! You are viewing this product from ProductLive.Show.")}
   end
 
+  defp maybe_track_user(
+         product,
+         %{assigns: %{current_scope: current_scope}} = socket
+       ) do
+    if connected?(socket) do
+      Presence.track_user(self(), product, current_scope.user.email)
+    end
+  end
+
   @impl true
-  @spec handle_info(
-        {:created, %Pento.Catalog.Product{}}
-        | {:deleted, %Pento.Catalog.Product{}}
-        | {:updated, %Pento.Catalog.Product{}}, Phoenix.LiveView.Socket.t()) :: {:noreply, Phoenix.LiveView.Socket.t()}
   def handle_info(
         {:updated, %Pento.Catalog.Product{id: id} = product},
         %{assigns: %{product: %{id: id}}} = socket
