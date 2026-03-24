@@ -7,7 +7,7 @@ defmodule Pento.Game.BoardTest do
 
   describe "puzzles/0" do
     test "returns supported board names" do
-      assert Board.puzzles() == [:default, :wide, :widest, :medium, :tiny, :skewed]
+      assert Board.puzzles() == [:default, :wide, :widest, :medium, :small, :tiny, :skewed]
     end
   end
 

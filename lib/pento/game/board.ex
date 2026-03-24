@@ -6,13 +6,20 @@ defmodule Pento.Game.Board do
             palette: [],
             points: []
 
-  def puzzles(), do: ~w(default wide widest medium tiny skewed)a
+  def puzzles(), do: ~w(default wide widest medium small tiny skewed)a
 
   def new(palette, points) do
     %__MODULE__{palette: palette(palette), points: points}
   end
 
+  @spec new(:default | :medium | :small | :skewed | :tiny | :wide | :widest) :: %Pento.Game.Board{
+          active_pento: nil,
+          completed_pentos: [],
+          palette: [:f | :i | :l | :n | :p | :s | :t | :u | :v | :w | :x | :y, ...],
+          points: any()
+        }
   def new(:tiny), do: new(:small, rect(5, 3))
+  def new(:small), do: new(:small, rect(8, 4))
   def new(:widest), do: new(:all, rect(20, 3))
   def new(:wide), do: new(:all, rect(15, 4))
   def new(:medium), do: new(:all, rect(12, 5))

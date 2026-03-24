@@ -31,7 +31,19 @@
     </script>
   </head>
   <body>
-    <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+    <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-between">
+    <!-- LEFT SIDE (logo) -->
+    <li class="flex items-center gap-2">
+      <a href="/">
+        <svg viewBox="0 0 55 55" class="h-6">
+          <rect x="0" y="0" width="55" height="55" fill="#DDD" />
+          <rect x="10" y="5" width="30" height="30" fill="#689042"></rect>
+          <rect x="10" y="35" width="15" height="15" fill="#689042"></rect>
+        </svg>
+      </a>
+      <span class="text-sm font-bold">Pentominos</span>
+    </li>
+      <!-- RIGHT SIDE (existing menu) -->
       <%= if @current_scope do %>
         <li>
           {@current_scope.user.email} ({@current_scope.role})
